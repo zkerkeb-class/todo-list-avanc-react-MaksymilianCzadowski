@@ -60,7 +60,7 @@ export function Task({
 
           <button
             className="w-9 h-9 bg-blue-500 text-white rounded-full flex justify-center items-center text-center p-0"
-            onClick={() => handleAddTask}>
+            onClick={() => handleAddTask()}>
             <p className="mb-0.5">+</p>
           </button>
         </div>
