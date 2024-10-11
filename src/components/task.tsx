@@ -2,6 +2,7 @@ import {useState, useMemo, useEffect, useCallback} from 'react';
 import {Input} from './input';
 import {Button} from './button';
 import task from '../interfaces/task';
+import {generateId} from '../utils/generateId';
 
 export function Task({
   tasks,
@@ -25,22 +26,24 @@ export function Task({
   );
 
   const handleAddTask = useCallback(() => {
-    setTasks([...tasks, {name: myNewTask, completed: false}]);
+    setTasks([...tasks, {id: generateId(), name: myNewTask, completed: false}]);
     setMyNewTask('');
   }, [tasks, myNewTask]);
 
   const handleRemoveTask = useCallback(
-    (index: number) => {
-      setTasks(tasks.filter((_, i) => i !== index));
+    (id: number) => {
+      setTasks(tasks.filter(task => task.id !== id));
     },
     [tasks],
   );
 
   const handleToggleTask = useCallback(
-    (index: number) => {
-      const newTasks = [...tasks];
-      newTasks[index].completed = !newTasks[index].completed;
-      setTasks(newTasks);
+    (id: number) => {
+      setTasks(
+        tasks.map(task =>
+          task.id === id ? {...task, completed: !task.completed} : task,
+        ),
+      );
     },
     [tasks],
   );
@@ -71,13 +74,13 @@ export function Task({
         </div>
         <div className="overflow-auto m-2">
           <ul className="w-full h-ful flex flex-col gap-2">
-            {visibleTask.map((task, index) => (
-              <li key={index} className="flex flex-row gap-1 items-center">
+            {visibleTask.map(task => (
+              <li key={task.id} className="flex flex-row gap-1 items-center">
                 <input
                   type="checkbox"
                   className="h-full text-lg flex justify-center items-center text-center"
                   checked={task.completed}
-                  onChange={() => handleToggleTask(index)}
+                  onChange={() => handleToggleTask(task.id)}
                 />
                 <p
                   className={
@@ -87,7 +90,7 @@ export function Task({
                 </p>
                 <button
                   className="w-9 h-9 text-xs text-red-500 flex justify-center items-center text-center p-2"
-                  onClick={() => handleRemoveTask(index)}>
+                  onClick={() => handleRemoveTask(task.id)}>
                   <p className="mb-0.5">remove</p>
                 </button>
               </li>
