@@ -28,13 +28,13 @@ export function Task({
   const handleAddTask = useCallback(() => {
     setTasks([...tasks, {id: generateId(), name: myNewTask, completed: false}]);
     setMyNewTask('');
-  }, [tasks, myNewTask]);
+  }, [tasks, myNewTask, setTasks]);
 
   const handleRemoveTask = useCallback(
     (id: number) => {
       setTasks(tasks.filter(task => task.id !== id));
     },
-    [tasks],
+    [tasks, setTasks],
   );
 
   const handleToggleTask = useCallback(
@@ -45,7 +45,7 @@ export function Task({
         ),
       );
     },
-    [tasks],
+    [tasks, setTasks],
   );
 
   useEffect(() => {
